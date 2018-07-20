@@ -1,0 +1,2 @@
+?package(geeyoueye):needs=X11 section=Apps/Misc\
+  title="geeyoueye" command="/usr/bin/geeyoueye"

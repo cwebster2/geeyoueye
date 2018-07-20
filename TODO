@@ -1,0 +1,28 @@
+$Id: TODO,v 1.23 2002/06/06 16:35:58 casey Exp $
+This file describes what still needs to be done, and
+who is responsible for getting them done.
+------------------------------------------------------
+
+FIXME: saved window coords are a bit off, windows move down after every exit, prob an amount equal to the window manager decoration border.
+FIXME: disconnect on exit
+DOME:  instrument debug box with output area and input line for GPS, RPHS, 6812 (servos, sonar, etc)
+DOME:  save recorder hostname
+FIXME: X,Y,Z,H sliders to tell the sim where to hover
+FIXME: GPS flight plans
+FIXME: remember file output name and state for debugwindow
+
+* packet header, int len, varname, int len, value - ww
+
+* re-do stats display to show values we will actually use.
+* control connection
+* allow function callbacks to be registered to handle opcodes incoming.
+* add numeric values to panel instruments so you can actually read them :)
+
+--------------------
+* Comments
+* Documentation
+* Shell Widget
+* AP Widget
+
+* Network protocol
+	Casey and Doug C

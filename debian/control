@@ -1,0 +1,12 @@
+Source: geeyoueye
+Section: x11
+Priority: optional
+Maintainer: Casey Webster <casey@trifocus.net>
+Build-Depends: debhelper (>> 3.0.0), libqt3-mt-dev, xlibs-dev
+Standards-Version: 3.5.2
+
+Package: geeyoueye
+Architecture: any
+Depends: ${shlibs:Depends}  
+Description: Geeyoueye
+ Software for the UT IARC team

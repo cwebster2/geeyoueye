@@ -1,0 +1,401 @@
+$Id: ChangeLog,v 1.29 2002/02/11 14:40:56 casey Exp $
+
+casey (2/11/02)
+----------------
+
+**** Please see debian/changelog for all new changelog entries ****
+
+casey (2/6/02)
+----------------
+
++ geeyoueye 0.3.7
+
++ Modifications
+  + src/tweak.cpp src/tweak.h
+    + tweakwindow overhaul, part 2.  StateSet mode implemented, only major
+      things left unimplemented is creating new sets and loading them. 
+      Just need to work out some usablility issues with the people who
+      will be interfacing with the code.
+  + testtools/tcptest.c
+    + added new packets and pretty print of output for debugging use
+
+casey (2/5/02)
+----------------
+
++ geeyoueye 0.3.6
+
++ Modifications
+  + src/tweak.cpp src/tweak.h
+    + tweakwindow overhaul, new support for "StateSets" which contain
+      "Sets".  A "Set" consists of 6 groups of 5 floats, C,P,I,D,S for
+      groups Roll, Pitch, Heading, X, Y, Z.  Currently multiple StateSet
+      support is not implemented, but multiple Sets are implemented 
+      within your single Set.  Transition support is mostly done, but
+      not in this release (i want to get something out the door).  The
+      new interface works as follows.  
+
+      In place of the old legend, there is now a group box named
+      "State Stuff" which is seperated into 3 areas.  The top area is
+      the transition area, which lists the current state, a box to 
+      select next state, and another box to give a time (integer time).
+      There is a button under that that begins a countdown, and then
+      will send the new state.
+
+      The part under this lists the "Currently Edited State".  Basically
+      this controls what the values in the CPIDS edit boxes represent.
+      The values belong to whatever state is being currently edited, 
+      and your options are to Reset the state, reverting to its saved
+      values, Save the state, and the Send the state.  Send immideatly
+      sends the current state over the network, and will reflect that 
+      this is the active state in the top transition section.
+
+      The bottom part is for controlling the "Edited State", you can
+      choose states from a box and load them into the edited portion,
+      or create new states.
+
+      NOTE:  Right now only the functions that send State data over the
+      network are implemented, but there is infrastructure that can 
+      handle sending full statesets over the network, and then just 
+      sending the indexes of the next state over the net to
+      signal transition, need to get with doug on this to get specifics
+      on how this will occur.
+
+      Currently the State data opcode is 0x20, there will be additional
+      opcodes allocated for sending StateSets, and State indexes.
+
+  + testtools/tcptest.c
+    + added support for the new tweakpacket for testing purposes.
+
+casey (12/29/01)
+----------------
+
++ geeyoueye 0.3.5
+
++ Bugfix
+  + src/tweak.cpp
+    + when sending all slider vals, the raw slider val was being sent,
+      which differs from actual slider val by a factor of 10^5.  oops.
++ Modifications
+  + src/tweak.cpp
+    + some qDebug() calls are protected by #ifdef DEBUG now, which is not
+      defined by default.  To build geeyoueye with debug output enabled,
+      please use ./configure --enable-debug.  Likewise --enable-profile will
+      include debug info and profiling support.
+
+casey (12/15/01)
+----------------
+
++ geeyoueye 0.3.4
+  + version numbering will increase more often now (at least the third
+    number), as this will be indicating new stable feature so that 
+    debian packaging will correctly interact with me. (non-debian native
+    packages get a -number added to the end of versioning to indicate 
+    debian release, debian native do not)
++ Additions
+  + src/tweak.cpp src/tweak.h
+    + slider profiling support in place, but not fully implemeted (90%)
+      if you are reading this because geeyoueye told you to, see the note
+      at the end of this entry :)
++ Modifications
+  + acinclude,m4
+    + -march=${target_cpu} is now added to the compile command, target_cpu
+      is determined from the local host-type or may be specified to
+      configure for cross-compilation.  need to add some more support for
+      non x86 portability i think, havent tested.
+
+NOTE ON SLIDER PROFILE SUPPORT
+
+ Via the new profile menu on the tweak window, you have the following
+ options: New profile, save profile, send profile.  These do the following,
+ + new profile
+   + will prompt you for a profile name, if profile exists it will load it,
+     otherwise it will create a new blank profile.  NOTE: currently this 
+     does *not* save the current profile before loading the new one.
+ + save profile
+   + self explanitory
+ + send profile
+   + sends all slider vals, this should occur when you load a profile as well
+
+ If you have old style rc information for sliders, it will be automatically
+ converted to profile support the first time you start geeyoueye, and be
+ named "Default" profile.
+
+ Lastly, although the profile is named "Default", geeyoueye will remember 
+ the last loaded profile and load that upon restart.  It wont let you know
+ that yet :)  but it will as soon as i get the list to browse profiles and
+ choose one to load coded.
+
+casey (12/5/01)
+----------------
+
++ Additions
+  + testtools/tcptest.c
+    + small program that geeyoueye can connect to in place of reporter.  Its
+      functionality is to just decode and echo tcp packets to stdout, to aid
+      in verification of proper behavior in geeyoueyes networking.
+
++ BugFix
+  + src/main.cpp
+    + typo in sendPacket(...) was causing crap(tm) to get sent out to reporter
+      instead of the optimal non-crap(tm).  This is fixes, and i have verified
+      that the slider packets are being transferred correctly on my end, its 
+      up to you now erg.
+
+casey (12/3/01)
+----------------
+
+Basic picture functionality has been restored, but still needs some 
+portions rewrote.  Classes are restructured for the most part, just need
+to go back through code and clean it up.
+
+syn - tweakslider will send you packets now, conenct to reporter via the
+data menu, then the packets should be transmitted.
+
+drew - by default, geeyoueye isnt reading jpegs, if you want them then
+export QTDIR=/usr/share/qt before running geeyoueye, but note that the
+panel will not draw and the program acts a little strange, i havent diagnosed
+the problem yet.
+
+Layout is a bit ugly at the moment, need to change default dock positions.
+each picture widget is now its own dock window and can be managed 
+seperatly.
+
+casey (11/28/01)
+----------------
+
+Major overhaul of class structures and hierarchy, and porting some things
+to qt3 specific classes.  Seperating classes to be childeren of objects
+that act as the master of thier "subsystem", ie UDP, TCP pic and TCP control
+subsystems, and each of these classes contains all neccesary child widgets
+and classes to privde functionalty as a single object.  Removes complexity
+and mess from MainWindow.  Telemetry data currently works in the new 
+implementation.  Basic TCP picture overhail implemented, but no real
+functionality.  TCP control has not yet begun overhaul.
+
+Overhaul should also increase stability since the new design will take
+thread safeness into account from the startt.  If you need a (semi)
+working version with pic support, please co the stable or gui_0_3_2 
+cvs tags, although there are 2 thread related crash bugs that made it
+in that release :(.
+
+casey (11/28/01)
+----------------
+
+Version
+ + geeyoueye version bumped to 0.3.2
+ 
+Bugfix
+ + src/data.cpp 
+   + made class threadsafe.  Determined that signals are executed in the 
+     context of the thread that raised them, and that was causing problems
+     in this class.  Async Xlib IO aborts and segfaults.  Seems to be 
+     ok now though.
+
+Additions
+ + src/main.h
+   + window positions and visible status are saved on exit now, and are
+     restored when started back up.
+
+Modifications
+ + testtools/mkfileout.c
+   + changed behavior, records file suitable for new packets.
+ + testtools/sendflight.c
+   + now sends current telemetry packet format.
+
+casey (11/27/01)
+----------------
+
+Additions
+ + src/tweak.cpp
+   + added logic to store and retrieve tweakslider settings from a file
+     so that they will persist.
+ + new saved preference code makes use of QSettings, which is not available
+   int qt 2.3 or below.  QT 3 is a requirement for now, i havent decided if
+   i will just disable that code if qt3 isnt being used, or if i will just 
+   require qt3 to work.
+ + src/main.cpp
+   + added stub to send packets out over the control connection for classes
+     that need to talk over it.
+Modifications
+ + qDebug now sends output to DebugWindow rather than stdout, for local
+   processing.
+
+casey (11/26/01)
+----------------
+
+BugFix!
+ + src/picload.cpp
+   + maybe jon and drew were right :)  found myself another non-threadsafe
+     class i was using in a thread.  QImage == segfaults in thread sometimes,
+     but i was able to make that sometime into everytime :).
+
+casey (11/26/01)
+----------------
+
+Additions
+ + src/debug.cpp src/debug.h
+   + new window for debug text output rather than using the console.  Has
+     options to clear window and limit number of lines in window.  Will
+     be extended to allow log output to be sent to a file at a later date.
+ + src/watch.cpp src/watch.h
+   + new window to watch variables sent from reporter.
+ + src/Makefile.am
+   + additions to add debug and watch files to the compile.
+ + src/main.cpp
+   + code to create and hide/show debug and watch window.
+
+Modifications
+ + src/tweak.cpp src/twak.h
+   + restructured tweak sub widget communication and implementation of the
+     parent classes.
+
+casey (11/24/01)
+----------------
+
+Modifications
+ + src/teldata.h src/teldata.cpp src/net.h
+   + changed tel_data struct and handle reception of new packets.
+
+casey (11/24/01)
+----------------
+
+Additions
+ + src/tweak.cpp src/tweak.h
+   + tweak window (display menu) for syn.  To modify values in realflight
+     on the fly for flight equation stuff.  
+ + src/Makefile.am
+   + additions to add tweak files to the compile.
+ + src/main.cpp
+   + code to create and hide/show tweak window.
+
+casey (11/14/01)
+----------------
+
+Modifications
+ + src/teldata.cpp
+   + changed handling of incoming telemetry data, now handles velocity
+     data as well as standard telemetry.
+ + src/main.cpp
+   + new options in the menubar for toggleing telemetry and velocity
+     data coming from reporter.
+   + reporter ip dialog now defaults to localhost.
+ + acinclude.m4
+   + added --with-QT-* options to the macro so absolute paths may be
+     given to configure to find Qt rather than using my very short
+     list of paths to search. 
+
+casey (11/13/01)
+----------------
+
+BugFix
+ + PicLoad's threads no longer linger on as Zombie processes and 
+   also no longer leak 2 megs of memory per invocation.
+
+Modifications
+ + src/main.cpp
+   + modified picture socket listen backlog to 1
+   + new slots to spawn and kill the picture load thread
+ + src/panel.cpp
+   + moved timer slot to only call update if needed, rather than
+     hardcoded at 1/20th of a second.
+ + src/picload.cpp
+   + migrated to thread safe QSocketDevice class
+ + testtools/sendpic.c, testtools/sendpicstream.c
+   + now sends packet to signal end of connection
+ 
+
+casey (11/13/01)
+----------------
+
+telemetry now isolated to its own thread, and basic registration code
+to reporter is setup.  geeyoueye so powah~
+
+casey (11/12/01)
+----------------
+
+Started work on control connection and isolating telemtry into its own
+thread.  New packet structures are in net.h ~
+
+casey (11/12/01)
+----------------
+
+Finally wrote my autoconf macro, configure will now look for libqt and
+libqt-mt (in that order), and see if that lib has been compiled for
+thread support.  It will choose the first one it encounters with thread
+support and set the approtiate compile and library flags for the makefiles.
+
+casey (11/12/01)
+----------------
+
+You can now send more than a single pic per connection to the 
+picture port.  You can send as many as you want.
+
+casey (11/11/01)
+----------------
+
+Implemented most of logic for Airspeed and RPM gauges and setup the
+function calls for the GPS display.  Updated TODO, lots of little
+things i need to implement.
+
+casey (11/3/01)
+----------------
+
+Attempting to put the pic loading into a thread of its own, but just
+linking with qt-mt causes the panel not to draw.  Havent figured it out
+yet, maybe a QT 3 issue.  
+
+casey (11/2/01)
+----------------
+
+CVS tag mayhem.  got tags straightened out, here is the current setup:
+
+default: development, unstable.
+stable: geeyoueye 0.2, stable.
+thread: unstable buggy threading crap :)
+
+casey (11/2/01)
+----------------
+
+Welcome to the Stable Tag, this commit is geeyoueye 0.2, stable.
+Development will work off of this version.  Geeyoueye now compiles
+against QT 3.0, only a couple lines needed to be changed.  Changes
+were to re-set QPainter::drawText's bounding rectangle, because QT
+has removed the DontClip allignment flag, and my 0 width/height
+rectangles were causing text not to be drawn.
+
+Picture Widget now uses QImage class instead of QPixmap.  This helps 
+a lot for the loadData() call that was previously producing jerkiness
+in the app.  It is still there, but very slight. 
+
+casey (10/18/01)
+----------------
+
+woot.  Restructured panel drawing.  
+
+casey (10/13/01)
+----------------
+
+hooked up signals and slots for more net data.
+
+casey (10/12/01)
+----------------
+
+Compiles on windows now.
+
+casey (10/11/01)
+----------------
+
+Basic artificial horizon indicator added.
+
+casey (10/11/01)
+----------------
+
+Restructured some object communication and re-implemented socket 
+communication with QT classes to increase portability.  Restructured
+the way the panel is re-drawn.
+
+casey (10/08/01)
+----------------
+
+Work done to panel, added VSI and Alt gauges, but no indicators yet (gauge 
+draws, but no actual arrows/hands to indicate values).

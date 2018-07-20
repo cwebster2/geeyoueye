@@ -1,0 +1,26 @@
+Geeyoueye 0.3.2 (11/28/01)
+-----------------------------------
+
+QT version 3 is now required, still bug with the jpeg lib.
+
+Geeyoueye 0.3.1 (11/12/01)
+-----------------------------------
+
+geeyoueye now autodetects the proper qt-mt lib.  Back to using qt 2.3,
+problems with threads+qt 3 atm.
+
+Geeyoueye 0.2 - (11/2/01)
+-----------------------------------
+
+Geeyoueye is now built against QT 3.0.
+
+
+Geeyoueye 0.1 - (?)
+-----------------------------------
+
+Geeyoueye is a base station for an Autonomous Helicopter.  It
+functions as a telemetry viewer and camera feed viewer.  It is
+only currently cabale of recieving telemtry and pictures, and
+not communicating the other direction.  The Panel is partially
+functional, and the layout is not yet finished.
+

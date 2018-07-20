@@ -1,0 +1,47 @@
+$Id: README,v 1.12 2002/06/06 16:35:58 casey Exp $
+---------------------------------------------------------------
+
+Geeyoueye 0.4.2
+
+Welcome.  In this distribution you will find the following:
+	* README:	this file
+	* INSTALL:	instructions for building geeyoueye
+	* AUTHORS:	who wrote this
+	* COPYING:	License information (GPL)
+	* TODO:		Features yet unimplemented
+	* NEWS:		Release development news
+	* ChangeLog	More detailed development changes
+	* configure	Package configuration script
+	* src/		Package source
+	* testtools/	tools used to test the built source
+
+To build the package, you will need the following:
+	* QT 3.0 compiled for thread support
+	
+Platform Specific requirements in addition to QT:
+	* Windows
+		Microsoft Visual C++ 6.0 or greater.
+	* Linux/Unix
+		c++ compiler (eg. gcc)
+		X Window System, or Framebuffer support(Linux)
+	* Macintosh OS X
+		c++ compiler
+
+To Build Geeyoueye, do the following:
+	* ./configure
+	* make
+	* make install
+
+	note: this document assumes you are working off a distibuted
+	release.  If you are working off CVS, please see CVS specific
+	instructions at the end of this document.
+
+Notes:
+	By itself, this software is pretty useless and boring.  It is
+	meant to be used with telemetry and vision software, that 
+	provide geeyoueye will all its data.  Availability of this 
+	software will be included in this document later.
+
+CVS Specific Notes:
+	To build geeyoueye, first run ./autogen.sh, then continue
+	as per the normal build instructions.

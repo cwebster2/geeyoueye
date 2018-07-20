@@ -1,0 +1,29 @@
+# $Id: Makefile.am,v 1.24 2002/06/05 12:49:42 casey Exp $
+
+#AUTOMAKE_OPTIONS=nostdinc
+
+bin_PROGRAMS=missionctl vision 
+
+dist_missionctl_SOURCES=missionctl.cpp ap.cpp data.cpp panel.cpp shell.cpp teldata.cpp tweak.cpp debug.cpp watch.cpp udpmaster.cpp 
+
+nodist_missionctl_SOURCES=m_missionctl.cpp m_ap.cpp m_data.cpp m_panel.cpp m_shell.cpp m_teldata.cpp m_tweak.cpp m_debug.cpp m_watch.cpp m_udpmaster.cpp
+
+missionctl_LDADD=@QT_LDFLAGS@
+
+dist_vision_SOURCES=vision.cpp pic.cpp tcppic.cpp debug.cpp picload.cpp
+nodist_vision_SOURCES=m_vision.cpp m_pic.cpp m_tcppic.cpp m_debug.cpp m_picload.cpp
+vision_LDADD=@QT_LDFLAGS@
+
+AM_CPPFLAGS=@QT_CXXFLAGS@ 
+BUILT_SOURCES=m_missionctl.cpp m_vision.cpp m_pic.cpp m_ap.cpp m_data.cpp m_panel.cpp m_shell.cpp m_picload.cpp m_teldata.cpp m_tweak.cpp m_debug.cpp m_watch.cpp m_udpmaster.cpp m_tcppic.cpp
+
+
+EXTRA_DIST=missionctl.h vision.h pic.h ap.h data.h panel.h shell.h picload.h teldata.h tweak.h debug.h watch.h net.h udpmaster.h tcppic.h testpic.jpg picevent.h televent.h
+CLEANFILES=$(BUILT_SOURCES)
+MAINTAINERCLEANFILES=Makefile.in
+
+MOC = 		@QT_MOC@
+
+m_%.cpp: %.h
+	$(MOC) -nw $< -o $@
+

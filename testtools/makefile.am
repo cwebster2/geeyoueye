@@ -1,0 +1,24 @@
+# $Id: Makefile.am,v 1.9 2002/06/04 09:48:58 casey Exp $
+
+#AUTOMAKE_OPTIONS=nostdinc
+
+bin_PROGRAMS=mkfileout sendflight sendpic sendpicstream tcptest
+
+tcptest_SOURCES=tcptest.c
+tcptest_LDADD=@testtool_LIBS@
+mkfileout_SOURCES=mkfileout.c
+mkfileout_LDADD=@testtool_LIBS@
+sendflight_SOURCES=sendflight.c
+sendflight_LDADD=@testtool_LIBS@
+sendpic_SOURCES=sendpic.c
+sendpic_LDADD=@testtool_LIBS@
+sendpicstream_SOURCES=sendpicstream.c
+sendpicstream_LDADD=@testtool_LIBS@
+
+#EXTRA_DIST=file.out file.out.vsi
+
+MAINTAINERCLEANFILES=Makefile.in
+
+install-data-local:
+	mkdir -p $(DESTDIR)
+	cp file.out file.out.vsi $(DESTDIR)

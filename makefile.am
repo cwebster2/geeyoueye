@@ -1,0 +1,9 @@
+# $Id: Makefile.am,v 1.8 2001/11/28 21:05:05 casey Exp $
+
+SUBDIRS=testtools src
+
+EXTRA_DIST=ChangeLog README TODO config.sub config.guess
+
+MAINTAINERCLEANFILES=aclocal.m4 config.guess config.sub configure Makefile.in \
+config.log stamp-h.in stamp-h depcomp \
+config.h.in config.cache
