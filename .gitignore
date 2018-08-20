@@ -1,0 +1,5 @@
+*.o
+src/m_*.cpp
+autom4te.cache
+config.log
+
